@@ -1,0 +1,31 @@
+version: "3"
+services:
+  admin-panel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www
+    volumes:
+      - .:/var/www/courses
+      - ./docker/php7.2.ini:/usr/local/etc/php/php.ini
+    environment:
+      APP_ENV: "local"
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      APP_ENV: "local"
+      MYSQL_USER: "courses_u"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_DATABASE: "courses"
+
+volumes:
+  database_data:
+    driver: local
