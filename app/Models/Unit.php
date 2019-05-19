@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Unit whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Unit whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Unit whereUpdatedAt($value)
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Unit whereDeletedAt($value)
  */
 class Unit extends Model
 {

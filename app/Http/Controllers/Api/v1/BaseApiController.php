@@ -14,6 +14,8 @@ use Lang;
  */
 class BaseApiController extends Controller
 {
+    const DEFAULT_TOTAL_PER_PAGE = 10;
+    const DEFAULT_FIRST_PAGE = 1;
     /**
      * Wrapper to the responses with errors
      *
@@ -73,8 +75,7 @@ class BaseApiController extends Controller
         $result = [
             'page'             => $paginator->currentPage(),
             'totalPages'       => $paginator->lastPage(),
-            'totalObjects'     => $paginator->total(),
-            'currentPageNumber' => $paginator->currentPage(),
+            'totalItems'     => $paginator->total(),
             'links'            => [
                 'nextUrl' => $paginator->nextPageUrl(),
                 'prevUrl' => $paginator->previousPageUrl()
