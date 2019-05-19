@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\JsonResponse;
+use Lang;
 
 /**
  * Class BaseApiController
@@ -26,7 +26,7 @@ class BaseApiController extends Controller
     {
         $response = [
             "success" => false,
-            "message" => $message
+            "message" => Lang::get($message)
         ];
 
         if ($data) {
@@ -39,16 +39,16 @@ class BaseApiController extends Controller
     /**
      * Wrapper to the responses with success
      *
-     * @param string|null $message
      * @param array|null $data
+     * @param string|null $message
      * @param int $code
      * @return JsonResponse
      */
-    protected function successResponse(string $message = null, $data = null, int $code = 200): JsonResponse
+    protected function successResponse($data = null, string $message = null, int $code = 200): JsonResponse
     {
         $response = [
             'success' => true,
-            'message' => ($message ? $message : Lang::get('api.general.success'))
+            'message' => ($message ? Lang::get($message) : Lang::get('api.general.success'))
         ];
 
         if ($data) {
