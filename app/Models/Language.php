@@ -38,7 +38,7 @@ class Language extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'id'
+        'name', 'id', 'created_at', 'deleted_at', 'updated_at'
     ];
 
     /**
