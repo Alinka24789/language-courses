@@ -28,38 +28,17 @@ class CourseController extends BaseApiController
 
         /** @var Course $courses */
         $coursesQuery = Course::query();
-
         if ($languageId) {
             $coursesQuery->ofLanguage($languageId);
         }
         if ($level) {
             $coursesQuery->ofLevel($level);
         }
-
         if ($text) {
             $coursesQuery->ofText($text);
         }
-
         if ($orderBy) {
-            switch ($orderBy) {
-                case Course::NAME_COLUMN:
-                    $coursesQuery->orderBy('name', $orderType)
-                        ->orderBy('year', $orderType);
-                    break;
-                case Course::LANGUAGE_COLUMN:
-                    $coursesQuery->orderBy('language.name', $orderType);
-                    break;
-                case Course::LEVEL_COLUMN:
-                    $coursesQuery->orderBy('level', $orderType);
-                    break;
-                case Course::UNITS_COLUMN:
-                    $coursesQuery->withCount('units')
-                        ->orderBy('units_count', $orderType);
-                    break;
-                default:
-                    $coursesQuery->orderBy('name', $orderType)
-                        ->orderBy('year', $orderType);
-            }
+            $coursesQuery->orderByColumn($orderBy, $orderType);
         }
         $coursesQuery->offset($page);
         $courses = $coursesQuery->paginate($total);

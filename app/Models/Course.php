@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * App\Models\Course
  *
@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course ofLanguage($languageId)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course ofLevel($level)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course ofText($text)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course orderByColumn($column, $orderType)
  */
 class Course extends Model
 {
@@ -88,6 +89,9 @@ class Course extends Model
         return $this->belongsTo(Language::class, 'language_id', 'id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function units()
     {
         return $this->hasMany(Unit::class, 'course_id', 'id');
@@ -96,7 +100,7 @@ class Course extends Model
     /**
      * @param Course $query
      * @param int $languageId
-     * @return mixed
+     * @return Builder
      */
     public function scopeOfLanguage($query, $languageId)
     {
@@ -106,11 +110,41 @@ class Course extends Model
     /**
      * @param Course $query
      * @param int $level
-     * @return mixed
+     * @return Builder
      */
     public function scopeOfLevel($query, $level)
     {
         return $query->whereLevel($level);
+    }
+
+    /**
+     * @param $query
+     * @param $column
+     * @param $orderType
+     * @return Builder
+     */
+    public function scopeOrderByColumn($query, $column, $orderType) {
+        switch ($column) {
+            case Course::NAME_COLUMN:
+                $query->orderBy('name', $orderType)
+                    ->orderBy('year', $orderType);
+                break;
+            case Course::LANGUAGE_COLUMN:
+                $query->orderBy('language.name', $orderType);
+                break;
+            case Course::LEVEL_COLUMN:
+                $query->orderBy('level', $orderType);
+                break;
+            case Course::UNITS_COLUMN:
+                $query->withCount('units')
+                    ->orderBy('units_count', $orderType);
+                break;
+            default:
+                $query->orderBy('name', $orderType)
+                    ->orderBy('year', $orderType);
+        }
+
+        return $query;
     }
 
     /**
