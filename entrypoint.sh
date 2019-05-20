@@ -6,6 +6,8 @@ chmod 777 -R storage
 
 composer install
 
+npm install
+
 if [ "${APP_ENV}" == "local" ]; then
 echo "local env"
 cp .env.example.local .env

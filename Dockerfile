@@ -37,6 +37,7 @@ COPY . /var/www/courses
 RUN apt-get update && apt-get -y dist-upgrade
 RUN apt-get -y install nginx openssl ca-certificates
 RUN apt-get -y install cron
+RUN apt-get -y install nodejs
 
 ADD docker/default.conf /etc/nginx/conf.d/default.conf
 ADD docker/nginx.conf /etc/nginx/nginx.conf
