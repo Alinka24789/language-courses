@@ -41,48 +41,22 @@ class BaseApiController extends Controller
     /**
      * Wrapper to the responses with success
      *
-     * @param array|null $data
+     * @param array $data
      * @param string|null $message
      * @param int $code
      * @return JsonResponse
      */
-    protected function successResponse($data = null, string $message = null, int $code = 200): JsonResponse
+    protected function successResponse($data = [], string $message = null, int $code = 200): JsonResponse
     {
         $response = [
             'success' => true,
             'message' => ($message ? Lang::get($message) : Lang::get('api.general.success'))
         ];
 
-        if ($data) {
-            if ($data instanceof AbstractPaginator) {
-                $response['data'] = $this->paginatorResponse($data);
-            } elseif ($data instanceof Model) {
-                $response['data'] = $data->toArray();
-            } else {
-                $response['data'] = $data;
-            }
+        if (!empty($data)) {
+            $response['data'] = $data;
         }
 
         return response()->json($response, $code);
-    }
-
-    /**
-     * @param AbstractPaginator $paginator
-     * @return array
-     */
-    private function paginatorResponse(AbstractPaginator $paginator): array
-    {
-        $result = [
-            'page'             => $paginator->currentPage(),
-            'totalPages'       => $paginator->lastPage(),
-            'totalItems'     => $paginator->total(),
-            'links'            => [
-                'nextUrl' => $paginator->nextPageUrl(),
-                'prevUrl' => $paginator->previousPageUrl()
-            ],
-            'items'            => $paginator->all()
-        ];
-
-        return $result;
     }
 }

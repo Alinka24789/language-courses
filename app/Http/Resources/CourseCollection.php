@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Course;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CourseCollection extends ResourceCollection
@@ -14,12 +15,25 @@ class CourseCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-
         return [
-            'name' => $this->name . '(' . $this->year . ')',
-            'language' => $this->language->name,
-            'level' => $this->level,
-            'units' => $this->units->count
+            'items' => $this->collection->map(function ($item) {
+                /** @var Course $item */
+                return [
+                    'name' => $item->name . ' (' . $item->year . ')',
+                    'language' => $item->language->name,
+                    'level' => $item->level,
+                    'units' => $item->units->count()
+                ];
+            }),
+            'links' => [
+                'page'             => $this->currentPage(),
+                'totalPages'       => $this->lastPage(),
+                'totalItems'     => $this->total(),
+                'links'            => [
+                    'nextUrl' => $this->nextPageUrl(),
+                    'prevUrl' => $this->previousPageUrl()
+                ],
+            ],
         ];
     }
 }

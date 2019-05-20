@@ -65,7 +65,7 @@ class CourseController extends BaseApiController
         $courses = $coursesQuery->paginate($total);
 
         return $this->successResponse(
-            $courses
+            new CourseCollection($courses)
         );
     }
 
