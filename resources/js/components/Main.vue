@@ -2,10 +2,9 @@
     <main>
         <v-app fill-height>
             <v-container fluid grid-list-md>
-                <v-layout row wrap>
-                    <v-flex md12>
-                        <h1>Find a Course</h1>
-                    </v-flex>
+                <v-layout row justify-space-between>
+                    <h1>Find a Course</h1>
+                    <v-btn color="primary" @click="logout">Logout</v-btn>
                 </v-layout>
                 <v-layout row wrap>
                     <v-flex md4>
@@ -33,6 +32,7 @@
 <script>
   import Sidebar from './sidebar/Sidebar'
   import ContentTable from './table/ContentTable'
+  import {logout} from '../services/api';
 
   export default {
     components: {
@@ -58,6 +58,9 @@
       },
       updateReset(variable) {
         this.reset = variable;
+      },
+      logout() {
+        logout();
       }
     }
   }

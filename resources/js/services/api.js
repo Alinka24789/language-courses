@@ -16,9 +16,7 @@ axios.interceptors.response.use(
     error => {
       const status = get(error, 'response.status');
       if (status === 403 || status === 401) {
-        removeAuthToken();
-        window.localStorage.removeItem('token');
-        router.push('/signin');
+        this.logout();
       }
       return Promise.reject(error);
     }
@@ -40,6 +38,12 @@ export const login = (email, password) =>
           window.localStorage.setItem('token', token);
           setAuthToken(token);
         });
+
+export const logout = () => {
+  removeAuthToken();
+  window.localStorage.removeItem('token');
+  router.push('/signin');
+};
 
 
 export const getLanguages = () =>
