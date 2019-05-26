@@ -1,14 +1,14 @@
 ## Installation of the project on the local machine
 
-1. Install Docker from here https://docs.docker.com/docker-for-mac/install/
-2. Run from project directory language-courses:
+1.Install Docker from here https://docs.docker.com/docker-for-mac/install/
+2.Run from project directory language-courses:
 
 ```sh
 docker-compose build
 docker-compose up -d
 ```  
 
-3. Check that containers available:
+3.Check that containers available:
 
 ```sh
 docker ps
@@ -36,3 +36,9 @@ There are should not errors and should be the last lines:
 ```
 
 If you see that above, please go to http://localhost
+
+4.To connect to the console of the container, please enter next:
+
+```
+docker exec -it language-courseslocal_admin-panel_1 /bin/bash
+```
