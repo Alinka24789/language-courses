@@ -48,6 +48,11 @@ class CourseController extends BaseApiController
         );
     }
 
+    /**
+     * Get levels list of the courses
+     *
+     * @return JsonResponse
+     */
     public function getLevels()
     {
         return $this->successResponse(

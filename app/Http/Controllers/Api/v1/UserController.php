@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Requests\Api\UserRequest;
-use App\Models\Language;
 use Illuminate\Http\JsonResponse;
-use Lang;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 

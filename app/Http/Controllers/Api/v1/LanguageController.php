@@ -9,7 +9,7 @@ use Lang;
 class LanguageController extends BaseApiController
 {
     /**
-     * Get language list
+     * Get languages list
      *
      * @return JsonResponse
      */
