@@ -40,7 +40,7 @@ class CourseTest extends TestCase
     }
 
     /**
-     * Test get courses
+     * Test get levels
      *
      * @return void
      */

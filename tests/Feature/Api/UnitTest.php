@@ -18,7 +18,7 @@ class UnitTest extends TestCase
     }
 
     /**
-     * Test get courses
+     * Test get units
      *
      * @return void
      */

@@ -18,7 +18,7 @@ class LanguageTest extends TestCase
     }
 
     /**
-     * Test get courses
+     * Test get languages
      *
      * @return void
      */
