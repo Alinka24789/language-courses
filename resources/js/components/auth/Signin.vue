@@ -1,27 +1,56 @@
 <template>
-    <div>
-        <input type="email" name="email" v-model="email">
-        <input type="password" name="password" v-model="password">
-        <button type="button"
-                class="loginButton"
-                :loading="processing"
-                @click.prevent="submit"
-                :disabled="!valid"
-        >
-            Submit
-        </button>
-    </div>
+    <v-app>
+        <section class="login">
+            <v-form v-model="valid" ref="form" lazy-validation @submit="submit()">
+                <v-container>
+                    <v-layout align-center justify-center row>
+                        <v-flex
+                                xs12
+                                md4
+                        >
+                            <v-text-field
+                                    label="E-mail"
+                                    v-model="email"
+                                    :error-messages="errorsEmail"
+                                    @input="$v.email.$touch()"
+                                    @blur="$v.email.$touch()"
+                                    required
+                            />
+                            <v-text-field
+                                    label="Password"
+                                    type="password"
+                                    v-model="password"
+                                    :error-messages="errorsPassword"
+                                    @input="$v.password.$touch()"
+                                    @blur="$v.password.$touch()"
+                                    required
+                            />
+                            <v-btn
+                                    color="info"
+                                    class="loginButton"
+                                    :loading="processing"
+                                    @click.prevent="submit"
+                            >
+                                login
+                            </v-btn>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-form>
+        </section>
+    </v-app>
 </template>
 
 <script>
- import { validationMixin } from 'vuelidate';
- import { required, email } from 'vuelidate/lib/validators';
-  import { login, setAuthToken } from '../../services/api';
+  import {validationMixin} from 'vuelidate';
+  import {required, email} from 'vuelidate/lib/validators';
+  import {login} from '../../services/api';
 
   export default {
-   mixins: [validationMixin],
+    mixins: [validationMixin],
     validations: {
-      email: { required, email }
+      email: { required, email },
+      password: { required }
     },
     data: () => ({
       valid: true,
@@ -32,12 +61,19 @@
     }),
 
     computed: {
-      emailErrors() {
+      errorsEmail() {
         const errors = [];
         if (!this.$v.email.$dirty) return errors;
         !this.$v.email.email && errors.push('Must be valid e-mail');
         !this.$v.email.required && errors.push('E-mail is required');
-        this.serverError && errors.push('E-mail is invalid');
+        this.serverError && errors.push('Credentials are invalid');
+        return errors;
+      },
+      errorsPassword() {
+        const errors = [];
+        if (!this.$v.email.$dirty) return errors;
+        !this.$v.password.required && errors.push('Password is required');
+        this.serverError && errors.push('Credentials are invalid');
         return errors;
       },
     },
@@ -52,12 +88,9 @@
         try {
           const result = await login(this.email, this.password);
           this.processing = false;
-          const { token } = result;
-          window.localStorage.setItem('token', token);
-          setAuthToken(token);
           this.$router.push('/');
         } catch (err) {
-          this.serverError = true;
+          this.serverError = err.response.data.message;
           this.processing = false;
         }
       },
@@ -66,17 +99,7 @@
 </script>
 
 <style>
-    .login {
-        width: 260px;
-        margin: auto;
-        padding: 16px;
-    }
-    .loginButton{
-        display: block;
-        margin: auto;
-    }
-    .error {
-        font-size: 12px;
-        color: red;
+    form {
+        margin-top: 100px;
     }
 </style>

@@ -1,23 +1,64 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <main>
+        <v-app fill-height>
+            <v-container fluid grid-list-md>
+                <v-layout row wrap>
+                    <v-flex md12>
+                        <h1>Find a Course</h1>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap>
+                    <v-flex md4>
+                        <sidebar
+                                @textSearch="updateTextSearch"
+                                @languageId="updateLanguage"
+                                @level="updateLevel"
+                                @reset="updateReset"
+                        ></sidebar>
+                    </v-flex>
+                    <v-flex md8 height="100%">
+                        <contentTable
+                                :languageId="languageId"
+                                :level="level"
+                                :text-search="textSearch"
+                                :reset="reset"
+                        ></contentTable>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-app>
+    </main>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+  import Sidebar from './sidebar/Sidebar'
+  import ContentTable from './table/ContentTable'
+
+  export default {
+    components: {
+      sidebar: Sidebar,
+      contentTable: ContentTable
+    },
+    data: () => ({
+      languageId: 0,
+      level: 0,
+      textSearch: '',
+      reset: false
+    }),
+    mounted() {},
+    methods: {
+      updateTextSearch(variable) {
+        this.textSearch = variable;
+      },
+      updateLanguage(variable) {
+        this.languageId = variable;
+      },
+      updateLevel(variable) {
+        this.level = variable;
+      },
+      updateReset(variable) {
+        this.reset = variable;
+      }
     }
+  }
 </script>

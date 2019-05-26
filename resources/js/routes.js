@@ -13,6 +13,7 @@ export default new Router({
   },
   routes: [
     {
+      name: 'content-table',
       path: '/',
       component: App,
       beforeEnter: (to, from, next) => {
@@ -26,6 +27,7 @@ export default new Router({
       }
     },
     {
+      name: 'signin',
       path: '/signin',
       component: SignIn,
       beforeEnter: (to, from, next) => {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 /**
  * App\Models\Course
  *
@@ -123,14 +124,16 @@ class Course extends Model
      * @param $orderType
      * @return Builder
      */
-    public function scopeOrderByColumn($query, $column, $orderType) {
+    public function scopeOrderByColumn($query, $column, $orderType)
+    {
         switch ($column) {
             case Course::NAME_COLUMN:
                 $query->orderBy('name', $orderType)
                     ->orderBy('year', $orderType);
                 break;
             case Course::LANGUAGE_COLUMN:
-                $query->orderBy('language.name', $orderType);
+                $query->join('languages', 'languages.id', '=', 'courses.language_id')
+                    ->orderBy('languages.name', $orderType);
                 break;
             case Course::LEVEL_COLUMN:
                 $query->orderBy('level', $orderType);
