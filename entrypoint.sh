@@ -8,6 +8,8 @@ composer install
 
 npm install
 
+npm run prod
+
 if [ "${APP_ENV}" == "local" ]; then
 echo "local env"
 cp .env.example.local .env
@@ -28,5 +30,4 @@ if [ "${env}" == "local" ]; then
   sh -c "while :; do sleep 60; done"
 fi
 
-# use to launch external script in AWS after entrypoint
 exec "$@"
