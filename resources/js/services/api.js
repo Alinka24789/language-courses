@@ -1,4 +1,3 @@
-// @see https://developers.hubspot.com/docs/overview
 import axios from 'axios';
 import get from 'lodash.get';
 import router from '../routes';
