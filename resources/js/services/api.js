@@ -16,7 +16,7 @@ axios.interceptors.response.use(
     error => {
       const status = get(error, 'response.status');
       if (status === 403 || status === 401) {
-        this.logout();
+        logout();
       }
       return Promise.reject(error);
     }
@@ -61,4 +61,7 @@ export const getCourses = (page = 1, perPage = 10, orderBy = 'name', orderType =
   if (orderType) params = `${params}&orderType=${orderType}`;
   return axios.get(  `/courses?${params}`);
 };
+
+export const searchUnits = (search = '') =>
+  axios.get(`/units/search?search=${search}`);
 

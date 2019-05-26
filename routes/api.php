@@ -25,4 +25,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1', 'middleware' => ['jwt.v
         Route::get('/', 'CourseController@index')->name('courses.index');
         Route::get('levels', 'CourseController@getLevels')->name('courses.getLevels');
     });
+    Route::group(['prefix' => 'units'], function() {
+        Route::get('/search', 'UnitController@index')->name('units.index');
+    });
 });

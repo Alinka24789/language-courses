@@ -3,12 +3,46 @@
         <v-flex md12>
             <v-card>
                 <v-card-text>
-                    <v-text-field
-                            v-model="search"
+                    <v-autocomplete
+                            v-model="model"
+                            :items="items"
+                            :loading="isLoading"
+                            :search-input.sync="search"
+                            color="white"
+                            hide-no-data
+                            hide-selected
+                            item-text="name"
+                            item-value="course"
                             label="Find unit"
                             placeholder="Unit name"
-                    ></v-text-field>
+                            prepend-icon="mdi-database-search"
+                            return-object
+                    ></v-autocomplete>
                 </v-card-text>
+                <v-divider></v-divider>
+                <v-expand-transition>
+                    <v-list v-if="model">
+                        <v-list-tile
+                                v-for="(field, i) in fields"
+                                :key="i"
+                        >
+                            <v-list-tile-content>
+                                <v-list-tile-title v-text="field.value"></v-list-tile-title>
+                                <v-list-tile-sub-title v-text="field.key.charAt(0).toUpperCase() + field.key.slice(1)"></v-list-tile-sub-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
+                </v-expand-transition>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            :disabled="!model"
+                            @click="model = null"
+                    >
+                        Clear
+                        <v-icon right>mdi-close-circle</v-icon>
+                    </v-btn>
+                </v-card-actions>
             </v-card>
         </v-flex>
         <v-flex md12>
@@ -36,7 +70,7 @@
 </template>
 
 <script>
-  import {getCourses} from "../../services/api";
+  import {getCourses, searchUnits} from "../../services/api";
 
   const ITEMS_PER_PAGE = 10;
   const FIRST_DEFAULT_PAGE = 1;
@@ -65,7 +99,12 @@
     },
     data() {
       return {
-        search: '',
+        descriptionLimit: 60,
+        entries: [],
+        isLoading: false,
+        model: null,
+        search: null,
+
         totalItems: 0,
         courses: [],
         loading: true,
@@ -131,6 +170,23 @@
             this.getCourses();
           }
         }
+      },
+      search (val) {
+        // Items have already been loaded
+        if (this.items.length > 0) return;
+
+        // Items have already been requested
+        if (this.isLoading) return;
+
+        this.isLoading = true;
+
+        // Lazily load input items
+        searchUnits(val)
+            .then(result => {
+              this.count = result.length;
+              this.entries = result;
+            })
+            .finally(() => (this.isLoading = false))
       }
     },
     computed: {
@@ -140,6 +196,25 @@
         ) return 0;
 
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+      },
+      fields () {
+        if (!this.model) return [];
+
+        return Object.keys(this.model).map(key => {
+          return {
+            key,
+            value: this.model[key] || 'n/a'
+          }
+        })
+      },
+      items () {
+        return this.entries.map(entry => {
+          const name = entry.name.length > this.descriptionLimit
+              ? entry.name.slice(0, this.descriptionLimit) + '...'
+              : entry.name;
+
+          return Object.assign({}, entry, { name })
+        })
       }
     },
     methods: {
